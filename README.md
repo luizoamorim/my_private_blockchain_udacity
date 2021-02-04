@@ -53,3 +53,19 @@ added to the chain encoding the Star information.
 7. The application will allow us to retrieve the Star objects belong to an 
 owner (wallet address). This information should be human readable so it 
 shouldn't be encoded.
+
+# Tools or technologies 
+This application will be created using Node.js and Javascript programming 
+language. The architecture will use ES6 classes because it will help us to 
+organize the code and facilitate the maintenance of the code.
+
+Some of the libraries or npm modules you will use are:
+```
+- "bitcoinjs-lib": "^4.0.3",
+- "bitcoinjs-message": "^2.0.0",
+- "body-parser": "^1.18.3",
+- "crypto-js": "^3.1.9-1",
+- "express": "^4.16.4",
+- "hex2ascii": "0.0.3",
+- "morgan": "^1.9.1"
+```
