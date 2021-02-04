@@ -62,10 +62,10 @@ organize the code and facilitate the maintenance of the code.
 Some of the libraries or npm modules you will use are:
 ```
 - "bitcoinjs-lib": "^4.0.3",
-- "bitcoinjs-message": "^2.0.0",
-- "body-parser": "^1.18.3",
-- "crypto-js": "^3.1.9-1",
-- "express": "^4.16.4",
-- "hex2ascii": "0.0.3",
-- "morgan": "^1.9.1"
+- bitcoinjs-message@^2.0.0,
+- body-parser@^1.18.3,
+- crypto-js@^3.1.9-1,
+- express@^4.16.4,
+- hex2ascii@0.0.3,
+- morgan@^1.9.1
 ```
