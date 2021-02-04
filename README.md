@@ -61,11 +61,31 @@ organize the code and facilitate the maintenance of the code.
 
 Some of the libraries or npm modules you will use are:
 ```
-- "bitcoinjs-lib": "^4.0.3",
-- bitcoinjs-message@^2.0.0,
-- body-parser@^1.18.3,
-- crypto-js@^3.1.9-1,
-- express@^4.16.4,
-- hex2ascii@0.0.3,
+- bitcoinjs-lib@^4.0.3
+- bitcoinjs-message@^2.0.0
+- body-parser@^1.18.3
+- crypto-js@^3.1.9-1
+- express@^4.16.4
+- hex2ascii@0.0.3
 - morgan@^1.9.1
+```
+
+## Libraries purpose:
+
+- **bitcoinjs-lib** and **bitcoinjs-message** will help us verify wallet address 
+ownership and signatures. 
+**Note:** Make sure to always use Legacy Wallet addresses.
+
+- **express** is a node framework used to create The REST Api used in this project
+
+- **body-parser** is used as a middleware module for Express and will help 
+us to read the json data submitted in a POST request.
+
+- **crypto-js** is a module containing some of the most important cryptographic
+ methods and will help us create the block hash.
+
+- **hex2ascii** will help us decode the data saved in the body of a Block.
+
+```
+All this libraries can be found in the package.json file in your project folder.
 ```
