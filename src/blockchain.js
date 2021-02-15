@@ -24,7 +24,7 @@ class Blockchain {
      */
     constructor() {
         this.chain = [];
-        this.height = -1;
+        this.height = chain.length;
         this.initializeChain();
     }
 

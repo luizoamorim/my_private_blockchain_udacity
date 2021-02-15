@@ -43,13 +43,14 @@ class Block {
             // Recalculate the hash of the Block
             const recalculatedHash = SHA256(self)
             // Comparing if the hashes changed
-            const validatingBlocksHash = currentHash === recalculatedHash
-            // Returning the Block is valid
-            // Returning the Block is not valid
+            const validatingBlocksHash = currentHash === recalculatedHash            
+            
             if(validatingBlocksHash) {    
-                resolve('Block is valid!');  
+                // Returning the Block is valid
+                resolve(true);                  
             } else {    
-                reject('Block is not valid');  
+                // Returning the Block is not valid
+                resolve(false);
             }                                    
         });
     }
@@ -75,9 +76,9 @@ class Block {
             // Resolve with the data if the object isn't the Genesis block
             if(this.previousBlockHash){
                 resolve(decodedDataObj)
-            } else {
-                reject('You are trying get data from the genesis block!')
-            }
+            } 
+            
+            reject(new Error('You are trying get data from the genesis block!'))            
         });
     }
 
