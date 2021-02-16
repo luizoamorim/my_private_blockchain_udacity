@@ -9,7 +9,7 @@
  */
 
 const SHA256 = require('crypto-js/sha256');
-const BlockClass = require('./block.js');
+const Block = require('./block.js');
 const bitcoinMessage = require('bitcoinjs-message');
 
 class Blockchain {
@@ -19,12 +19,13 @@ class Blockchain {
      * of your chain (the length of your chain array).
      * Also everytime you create a Blockchain class you will need to initialized the chain creating
      * the Genesis Block.
+     * 
      * The methods in this class will always return a Promise to allow client applications or
      * other backends to call asynchronous functions.
      */
     constructor() {
         this.chain = [];
-        this.height = chain.length;
+        this.height = -1;
         this.initializeChain();
     }
 
@@ -34,9 +35,8 @@ class Blockchain {
      * Passing as a data `{data: 'Genesis Block'}`
      */
     async initializeChain() {
-        if( this.height === -1){
-            let block = new BlockClass.Block({data: 'Genesis Block'});
-            await this._addBlock(block);
+        if(this.height<=0){            
+            await this._addBlock(new Block({data: 'Genesis Block'}));
         }
     }
 
@@ -44,8 +44,9 @@ class Blockchain {
      * Utility method that return a Promise that will resolve with the height of the chain
      */
     getChainHeight() {
-        return new Promise((resolve, reject) => {
-            resolve(this.height);
+        let self = this;
+        return new Promise((resolve) => {
+            resolve(self.chain.length);
         });
     }
 
@@ -64,7 +65,24 @@ class Blockchain {
     _addBlock(block) {
         let self = this;
         return new Promise(async (resolve, reject) => {
-           
+           try {            
+                
+                
+                if(self.chain.length > 0){
+                    block.previousBlockHash = self.chain[self.chain.length-1].hash;
+                }
+                
+                block.time = new Date.now();
+                block.hash = SHA256(block);
+                block.height = self.chain.length;
+
+                self.chain.push(block);
+                self.height++;
+
+                resolve(block)
+           } catch(err) {
+                reject(err)
+           }
         });
     }
 
@@ -78,7 +96,9 @@ class Blockchain {
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-            
+            resolve(`
+                ${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry
+            `)
         });
     }
 
@@ -102,7 +122,17 @@ class Blockchain {
     submitStar(address, message, signature, star) {
         let self = this;
         return new Promise(async (resolve, reject) => {
-            
+            try {
+                let timeFromSentMessage = parseInt(message.split(':')[1]);
+                let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+                timeElapsed = currentTime - timeFromSentMessage;
+                if(timeElapsed < 5 && bitcoinMessage.verify(message, address, signature)) {
+                    let block = new BlockClass(message)
+                    self._addBlock(block);
+                }
+            } catch(err) {
+                reject(err)
+            }
         });
     }
 
@@ -166,4 +196,4 @@ class Blockchain {
 
 }
 
-module.exports.Blockchain = Blockchain;   
+module.exports = Blockchain;   

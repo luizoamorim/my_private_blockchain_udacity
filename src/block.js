@@ -84,4 +84,4 @@ class Block {
 
 }
 
-module.exports.Block = Block;                    // Exposing the Block class as a module
+module.exports = Block; // Exposing the Block class as a module
