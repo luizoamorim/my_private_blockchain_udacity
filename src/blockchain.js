@@ -36,7 +36,7 @@ class Blockchain {
      */
     async initializeChain() {
         if(this.height<=0){            
-            await this._addBlock(new Block({data: 'Genesis Block'}));
+            await this._addBlock(new Block.Block({data: 'Genesis Block'}));
         }
     }
 
@@ -63,11 +63,9 @@ class Blockchain {
      * that this method is a private method. 
      */
     _addBlock(block) {
-        let self = this;
+        let self = this;        
         return new Promise(async (resolve, reject) => {
-           try {            
-                
-                
+            try {                                            
                 if(self.chain.length > 0){
                     block.previousBlockHash = self.chain[self.chain.length-1].hash;
                 }
@@ -75,14 +73,14 @@ class Blockchain {
                 block.time = new Date.now();
                 block.hash = SHA256(block);
                 block.height = self.chain.length;
-
-                self.chain.push(block);
-                self.height++;
-
-                resolve(block)
-           } catch(err) {
+                
+            } catch(err) {
                 reject(err)
-           }
+            }           
+            self.chain.push(block);                
+            self.height++;
+                
+            resolve(block)
         });
     }
 
@@ -196,4 +194,4 @@ class Blockchain {
 
 }
 
-module.exports = Blockchain;   
+module.exports.Blockchain = Blockchain;   
