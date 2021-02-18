@@ -212,3 +212,11 @@ You should see in your terminal a message indicating that the server is listenin
 
 6. Retrieve Stars owned by me
     ![Request: http://localhost:8000/blocks/<WALLET_ADDRESS>](https://s3.amazonaws.com/video.udacity-data.com/topher/2019/April/5ca362b9_retrieve-stars/retrieve-stars.png)
+
+
+# Bitcoin-core
+
+How to get a new adress:
+```
+getnewaddress "mylabel" "legacy"
+```

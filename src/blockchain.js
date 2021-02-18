@@ -66,11 +66,11 @@ class Blockchain {
         let self = this;        
         return new Promise(async (resolve, reject) => {
             try {                                            
-                if(self.chain.length > 0){
+                if(self.height >= 0){
                     block.previousBlockHash = self.chain[self.chain.length-1].hash;
                 }
                 
-                block.time = new Date.now();
+                block.time = new Date().getTime().toString().slice(0,-3);
                 block.hash = SHA256(block);
                 block.height = self.chain.length;
                 
@@ -86,10 +86,13 @@ class Blockchain {
 
     /**
      * The requestMessageOwnershipVerification(address) method
-     * will allow you  to request a message that you will use to
+     * will allow you to request a message that you will use to
      * sign it with your Bitcoin Wallet (Electrum or Bitcoin Core)
+     * 
      * This is the first step before submit your Block.
+     * 
      * The method return a Promise that will resolve with the message to be signed
+     * 
      * @param {*} address 
      */
     requestMessageOwnershipVerification(address) {
@@ -119,18 +122,19 @@ class Blockchain {
      */
     submitStar(address, message, signature, star) {
         let self = this;
-        return new Promise(async (resolve, reject) => {
-            try {
-                let timeFromSentMessage = parseInt(message.split(':')[1]);
-                let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
-                timeElapsed = currentTime - timeFromSentMessage;
-                if(timeElapsed < 5 && bitcoinMessage.verify(message, address, signature)) {
-                    let block = new BlockClass(message)
-                    self._addBlock(block);
-                }
-            } catch(err) {
-                reject(err)
+        let timeFromSentMessage = parseInt(message.split(':')[1]);
+        let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+        let timeElapsed = timeFromSentMessage - currentTime;
+        let blockAdded;
+        const FIVE_MIN = 5*60*1000;
+
+        return new Promise(async (resolve, reject) => {                                            
+            if(timeElapsed < FIVE_MIN && bitcoinMessage.verify(message, address, signature)) {                    
+                blockAdded = await self._addBlock(new Block.Block({star: star, owner: address}));
+            }else{        
+                reject(new Error(`Time lapsed is biggest than 5 minutes!`));
             }
+            resolve(blockAdded);
         });
     }
 
@@ -143,7 +147,11 @@ class Blockchain {
     getBlockByHash(hash) {
         let self = this;
         return new Promise((resolve, reject) => {
-           
+           let blockFinded = self.chain.filter(block => block.hash === hash)
+           if(blockFinded){
+               resolve(blockFinded)
+           }
+           reject('The block was not finded!')
         });
     }
 
@@ -174,7 +182,18 @@ class Blockchain {
         let self = this;
         let stars = [];
         return new Promise((resolve, reject) => {
-            
+            console.log('LENGTH: ',self.chain.length)
+            self.chain.forEach(async (block) => {
+                if(block.height>0){                                    
+                    console.log(block)
+                    let blockDecoded = await block.getBData();
+                    
+                    if(blockDecoded.owner === address){
+                        stars.push(blockDecoded.star)
+                    }              
+                }                      
+            })
+            resolve(stars)
         });
     }
 
@@ -188,7 +207,16 @@ class Blockchain {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-            
+            self.chain.forEach(async block => {
+                if(!await block.validate()){
+                    errorLog.push(`The block ${block.height} is invalid!`)
+                }
+                if(block.height>0){
+                    if(self.chain[block.height-1].hash !== block.previousBlockHash){
+                        errorLog.push(`Blockchain is invalid! PreviousHash of block ${block.height} is wrong!`)
+                    }
+                }
+            })
         });
     }
 

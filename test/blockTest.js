@@ -52,5 +52,23 @@ describe('BlockChain tests', () => {
             }
         )   
     })
+
+    // it(`should try to add blocks on the blockchain!`, async () => {
+    //     let addr = 'mzdAC5NL5GgcX5QeE5RFaJzvbEhPkTc7LE';
+    //     let signature = 'H7upWrB6Fy3W35SsCdgcIZvFaVk6Lz4pqLBb/ZtLzU7eJ++TRRtFMdse4kawUg0LMQCsavrs5T9zrUAAFvmhsbQ=';
+    //     let message = 'mzdAC5NL5GgcX5QeE5RFaJzvbEhPkTc7LE:1613607918:starRegistry'
+
+    //     let verified = await blockchain.submitStar(
+    //         addr,
+    //         message,
+    //         signature,
+    //         {
+    //             name: 'Estrela teste'
+    //         }
+
+    //     )
+
+    //     assert.ok(verified,'object');
+    // })
     
 })
