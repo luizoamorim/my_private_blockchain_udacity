@@ -63,23 +63,23 @@ class Blockchain {
      * that this method is a private method. 
      */
     _addBlock(block) {
-        let self = this;        
+        let self = this;
         return new Promise(async (resolve, reject) => {
-            try {                                            
+            try {
                 if(self.height >= 0){
                     block.previousBlockHash = self.chain[self.chain.length-1].hash;
+                    console.log('PREVIOUS> ',self.chain[self.chain.length-1].hash)
                 }
                 
                 block.time = new Date().getTime().toString().slice(0,-3);
-                block.hash = SHA256(block);
-                block.height = self.chain.length;
-                
+                block.height = self.chain.length;                  
             } catch(err) {
                 reject(err)
-            }           
-            self.chain.push(block);                
-            self.height++;
-                
+            }
+            
+            block.hash = SHA256(JSON.stringify(block)).toString();  
+            self.chain.push(block);
+            self.height++;                            
             resolve(block)
         });
     }
