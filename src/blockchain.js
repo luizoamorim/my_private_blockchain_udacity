@@ -127,10 +127,10 @@ class Blockchain {
         const FIVE_MIN = 5*60*1000;
 
         return new Promise(async (resolve, reject) => {                                            
-            if(timeElapsed < FIVE_MIN && bitcoinMessage.verify(message, address, signature)) {                    
+            if(timeElapsed < FIVE_MIN && bitcoinMessage.verify(message, address, signature) && message) {
                 blockAdded = await self._addBlock(new Block.Block({star: star, owner: address}));
             }else{        
-                reject(new Error(`Time lapsed is biggest than 5 minutes!`));
+                reject(new Error(`Time lapsed can't be bigger than 5 minutes neither the message can be empty!`));
             }
             resolve(blockAdded);
         });
